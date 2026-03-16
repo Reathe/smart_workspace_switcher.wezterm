@@ -118,23 +118,30 @@ end
 ---@return Choice[]
 function pub.get_choices()
 	local choices = {} ---@type Choice[]
-	for key, el in pairs(pub.choice_sources) do
+
+	local function append_source(key)
+		local el = pub.choice_sources[key]
 		if el.opts == nil then
 			el.opts = {}
 		end
 
-		local source_choices = el.get_list(el.formatter or function(str)
-			return str
-		end, el.opts)
-
-		-- Loop through them and prepend the key to the ID
-		for _, choice in ipairs(source_choices) do
-			table.insert(choices, {
-				id = key .. "|" .. choice.id,
-				label = choice.label,
-			})
+		for _, choice in
+			ipairs(el.get_list(el.formatter or function(str)
+				return str
+			end, el.opts))
+		do
+			table.insert(choices, { id = key .. "|" .. choice.id, label = choice.label })
 		end
 	end
+
+	append_source("workspace")
+
+	for key, _ in pairs(pub.choice_sources) do
+		if key ~= "workspace" then
+			append_source(key)
+		end
+	end
+
 	return choices
 end
 
