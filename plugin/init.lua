@@ -33,8 +33,9 @@ require("helpers")
 local pub = {
 	choices = {},
 	choice_sources = {
-		zoxide = require("sources.zoxide"),
 		workspace = require("sources.workspace"),
+		zoxide = require("sources.zoxide"),
+		ssh = require("sources.ssh"),
 	},
 }
 
